@@ -1,15 +1,7 @@
 <template>
   <v-app>
     <v-row>
-      <v-btn
-        class="ma-2"
-        :loading="loading"
-        :disabled="loading"
-        color="secondary"
-        @click="loader = 'loading'"
-        height="80"
-        width="160"
-      >
+      <v-btn class="ma-2" color="secondary" height="80" width="160">
         imgが入る予定
       </v-btn>
     </v-row>
@@ -33,9 +25,5 @@ export default {
   components: {
     Questions,
   },
-
-  data: () => ({
-    //
-  }),
 };
 </script>
