@@ -1,9 +1,9 @@
 <template>
   <v-app>
     <v-row>
-      <v-btn class="ma-2" color="secondary" height="80" width="160">
-        imgが入る予定
-      </v-btn>
+      <v-col>
+        <v-btn color="secondary" height="80" width="160"> imgが入る予定 </v-btn>
+      </v-col>
     </v-row>
 
     <v-main>

@@ -48,6 +48,9 @@
       あなたの1日の消費カロリーは{{ calories.toFixed(1) }}Kcalです。
       {{ answer_box }}
     </div>
+    <v-col cols="12">
+      <v-btn text color="success" @click="back">◀back</v-btn>
+    </v-col>
   </v-app>
 </template>
 
@@ -120,23 +123,43 @@ export default {
     };
   },
   methods: {
+    //診断スタート
     start() {
       this.start_flg = false;
       this.answer_btn_num = this.questions[this.question_num].btn_num;
       this.question = this.questions[this.question_num].question_text;
     },
+    //
+    //次の質問
     next(answer) {
       this.question_num++;
       this.answer_btn_num = this.questions[this.question_num].btn_num;
       this.question = this.questions[this.question_num].question_text;
+      //ボタンの値が「入力」(フィールド入力)の場合
       if (answer == "入力") {
         this.answer_box.push(this.answer_texts.map(Number));
         this.answer_texts = "";
       } else {
         this.answer_box.push(answer);
       }
+      //
     },
-    //参考 数字と小数点の入力のみ許可する「https://kntmr.hatenablog.com/entry/2019/01/11/175800」
+    //
+    //前の画面に戻る
+    back() {
+      //1問目の場合
+      if (this.question_num == 0) {
+        this.start_flg = true;
+      //
+      } else {
+        this.question_num--;
+        this.answer_btn_num = this.questions[this.question_num].btn_num;
+        this.question = this.questions[this.question_num].question_text;
+        this.answer_box.splice(this.question_num, 1);
+      }
+    },
+    //
+    //数字と小数点の入力のみ許可する 参考「https://kntmr.hatenablog.com/entry/2019/01/11/175800」
     validate(e) {
       const charCode = e.which ? e.which : e.keyCode;
       if (
@@ -168,11 +191,13 @@ export default {
     //参考
   },
   watch: {
+    //質問が終わったら
     question_num() {
       if (this.question_num == this.questions.length - 1) {
         this.result_flg = false;
       }
       this.answer_box = this.answer_box.flat();
+      //
       //男性の場合
       if (this.answer_box[0] == 0) {
         this.calories =
@@ -181,6 +206,7 @@ export default {
             5 * this.answer_box[3] +
             5) *
           this.answer_box[4];
+          //
       } else {
         //女性の場合
         this.calories =
@@ -190,6 +216,7 @@ export default {
             161) *
           this.answer_box[4];
       }
+      //
     },
     //fieldの数、入力が確認されたら
     answer_texts() {
@@ -200,6 +227,7 @@ export default {
         this.questions[this.question_num].activateSubmit_flg = false;
       }
     },
+    //
   },
 };
 </script>
