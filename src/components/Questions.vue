@@ -1,56 +1,59 @@
 <template>
   <v-app>
-    <div class="start-screen" v-if="start_flg">
-      <h1>消費カロリー診断</h1>
-      <p class="text-h6">診断を始める！</p>
-      <v-btn color="success" @click="start"> START </v-btn>
-    </div>
+    <v-row justify="center" class="ma-0">
+      <div class="start-screen" v-if="start_flg">
+        <h1>消費カロリー診断</h1>
+        <p class="text-h6">診断を始める！</p>
+        <v-btn color="success" @click="start"> START </v-btn>
+      </div>
 
-    <div class="main-screen">
-      <div v-if="!start_flg && result_flg">
-        <div class="question-area">
-          <h1>{{ question }}</h1>
-        </div>
-        <div class="answer-area">
-          <div v-if="text_answer_flg == questions[question_num].text_answer">
-            <div
-              v-for="(n, index) in questions[question_num].text_answer_fields"
-              :key="n"
-            >
-              <v-text-field
-                v-bind:type="questions[question_num].text_type"
-                v-bind:label="n"
-                v-model="answer_texts[index]"
-                @keypress="validate"
-                @input="value = format(value)"
-              ></v-text-field>
-            </div>
+      <div class="main-screen">
+        <div v-if="!start_flg && result_flg">
+          <div class="question-area">
+            <h1>{{ question }}</h1>
           </div>
-          <v-row>
-            <div v-for="(n, index) in answer_btn_num" :key="n">
-              <v-col>
-                <v-btn
-                  v-bind:disabled="questions[question_num].activateSubmit_flg"
-                  color="success"
-                  @click="next(questions[question_num].btn_[index].value)"
-                >
-                  {{ questions[question_num].btn_[index].btn_text }}
-                </v-btn>
-              </v-col>
+          <div class="answer-area">
+            <div v-if="text_answer_flg == questions[question_num].text_answer">
+              <div
+                v-for="(n, index) in questions[question_num].text_answer_fields"
+                :key="n"
+              >
+                <v-text-field
+                  v-bind:type="questions[question_num].text_type"
+                  v-bind:label="n"
+                  v-model="answer_texts[index]"
+                  @keypress="validate"
+                  @input="value = format(value)"
+                ></v-text-field>
+              </div>
             </div>
-          </v-row>
-          <p>{{ question_num + 1 }}/{{ questions.length - 1 }}</p>
+            <v-row class="ma-0" justify="center">
+              <div v-for="(n, index) in answer_btn_num" :key="n">
+                <v-col>
+                  <v-btn
+                    v-bind:disabled="questions[question_num].activateSubmit_flg"
+                    color="success"
+                    @click="next(questions[question_num].btn_[index].value)"
+                  >
+                    {{ questions[question_num].btn_[index].btn_text }}
+                  </v-btn>
+                </v-col>
+              </div>
+            </v-row>
+            <p>{{ question_num + 1 }}/{{ questions.length - 1 }}</p>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="result_screen" v-if="!result_flg">
-      あなたの1日の消費カロリーは{{ calories.toFixed(1) }}Kcalです。
-      {{ answer_box }}
+      <div class="result_screen" v-if="!result_flg">
+        あなたの1日の消費カロリーは{{ calories.toFixed(1) }}Kcalです。
+      </div>
+    </v-row>
+    <div class="about-back pb-10" v-if="result_flg" style="position: fixed; bottom: 10px;">
+      <v-col cols="12" class="pa-0">
+        <v-btn text color="success" @click="back">◀back</v-btn>
+      </v-col>
     </div>
-    <v-col cols="12">
-      <v-btn text color="success" @click="back">◀back</v-btn>
-    </v-col>
   </v-app>
 </template>
 
@@ -135,14 +138,16 @@ export default {
       this.question_num++;
       this.answer_btn_num = this.questions[this.question_num].btn_num;
       this.question = this.questions[this.question_num].question_text;
+      console.log(this.answer_box);
       //ボタンの値が「入力」(フィールド入力)の場合
       if (answer == "入力") {
         this.answer_box.push(this.answer_texts.map(Number));
-        this.answer_texts = "";
+        console.log(this.answer_box);
       } else {
         this.answer_box.push(answer);
       }
       //
+      console.log(this.answer_box);
     },
     //
     //前の画面に戻る
@@ -150,7 +155,7 @@ export default {
       //1問目の場合
       if (this.question_num == 0) {
         this.start_flg = true;
-      //
+        //
       } else {
         this.question_num--;
         this.answer_btn_num = this.questions[this.question_num].btn_num;
@@ -195,27 +200,27 @@ export default {
     question_num() {
       if (this.question_num == this.questions.length - 1) {
         this.result_flg = false;
-      }
-      this.answer_box = this.answer_box.flat();
-      //
-      //男性の場合
-      if (this.answer_box[0] == 0) {
-        this.calories =
-          (10 * this.answer_box[2] +
-            6.25 * this.answer_box[1] -
-            5 * this.answer_box[3] +
-            5) *
-          this.answer_box[4];
+        this.answer_box = this.answer_box.flat();
+        //男性の場合
+        if (this.answer_box[0] == 0) {
+          this.calories =
+            (10 * this.answer_box[2] +
+              6.25 * this.answer_box[1] -
+              5 * this.answer_box[3] +
+              5) *
+            this.answer_box[4];
           //
-      } else {
-        //女性の場合
-        this.calories =
-          (10 * this.answer_box[2] +
-            6.25 * this.answer_box[1] -
-            5 * this.answer_box[3] -
-            161) *
-          this.answer_box[4];
+        } else {
+          //女性の場合
+          this.calories =
+            (10 * this.answer_box[2] +
+              6.25 * this.answer_box[1] -
+              5 * this.answer_box[3] -
+              161) *
+            this.answer_box[4];
+        }
       }
+      //
       //
     },
     //fieldの数、入力が確認されたら
