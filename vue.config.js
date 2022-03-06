@@ -5,9 +5,7 @@ module.exports = defineConfig({
   ]
 })
 
-//追加
 module.exports = {
-  publicPath: process.env.NODE_ENV === 'production'
-    ? '/calorie-calculation-app/'   //任意
-    : '/'
+  outputDir: 'docs',
+  publicPath: './'
 }
