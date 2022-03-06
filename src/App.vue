@@ -27,3 +27,9 @@ export default {
   },
 };
 </script>
+
+<style>
+.test {
+  background-color: rgb(182, 202, 182);
+}
+</style>

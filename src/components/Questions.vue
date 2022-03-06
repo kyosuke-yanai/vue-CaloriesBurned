@@ -1,14 +1,16 @@
 <template>
   <v-app>
-    <v-row justify="center" class="ma-0">
-      <div class="start-screen" v-if="start_flg">
-        <h1>消費カロリー診断</h1>
-        <p class="text-h6">診断を始める！</p>
-        <v-btn color="success" @click="start"> START </v-btn>
+    <v-row class="ma-0 contents">
+      <div class="start" v-if="start_flg">
+        <div class="screen">
+          <h1>消費カロリー診断</h1>
+          <p class="text-h6">診断を始める！</p>
+          <v-btn color="success" @click="start"> START </v-btn>
+        </div>
       </div>
 
-      <div class="main-screen">
-        <div v-if="!start_flg && result_flg">
+      <div class="main" v-if="!start_flg && result_flg">
+        <div class="screen">
           <div class="question-area">
             <h1>{{ question }}</h1>
           </div>
@@ -45,15 +47,36 @@
         </div>
       </div>
 
-      <div class="result_screen" v-if="!result_flg">
-        あなたの1日の消費カロリーは{{ calories.toFixed(1) }}Kcalです。
+      <div class="result" v-if="!result_flg">
+        <div class="screen">
+          <h1>
+            あなたの1日の消費カロリーは{{ calories.toFixed(1) }}Kcalです。
+          </h1>
+        </div>
       </div>
     </v-row>
-    <div class="about-back pb-10" v-if="result_flg" style="position: fixed; bottom: 10px;">
+
+    <div class="about-back pb-10">
       <v-col cols="12" class="pa-0">
-        <v-btn text color="success" @click="back">◀back</v-btn>
+        <v-btn text color="success" @click="about_back">
+          {{ about_back_btn }}
+        </v-btn>
       </v-col>
     </div>
+
+    <v-dialog v-model="about_dialog" width="500">
+      <v-card>
+        <v-card-title>このサイトについて</v-card-title>
+        <v-divider></v-divider>
+        <v-card-text>
+          <v-sheet class="pa-3">
+            <div class="body-1">
+              <p>このサイトで算出される～～～</p>
+            </div>
+          </v-sheet>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
@@ -65,6 +88,7 @@ export default {
       start_flg: true,
       result_flg: true,
       text_answer_flg: true,
+      about_dialog: false,
       questions: [
         {
           question_text: "あなたの性別は？",
@@ -123,6 +147,7 @@ export default {
       answer_texts: [],
       answer_box: [],
       calories: 0.0,
+      about_back_btn: "about",
     };
   },
   methods: {
@@ -131,6 +156,7 @@ export default {
       this.start_flg = false;
       this.answer_btn_num = this.questions[this.question_num].btn_num;
       this.question = this.questions[this.question_num].question_text;
+      this.about_back_btn = "◀back";
     },
     //
     //次の質問
@@ -138,32 +164,35 @@ export default {
       this.question_num++;
       this.answer_btn_num = this.questions[this.question_num].btn_num;
       this.question = this.questions[this.question_num].question_text;
-      console.log(this.answer_box);
       //ボタンの値が「入力」(フィールド入力)の場合
       if (answer == "入力") {
         this.answer_box.push(this.answer_texts.map(Number));
-        console.log(this.answer_box);
       } else {
         this.answer_box.push(answer);
       }
       //
-      console.log(this.answer_box);
     },
     //
-    //前の画面に戻る
-    back() {
-      //1問目の場合
-      if (this.question_num == 0) {
-        this.start_flg = true;
-        //
+    //aboutかbackかの処理
+    about_back() {
+      if (this.about_back_btn == "about") {
+        this.about_dialog = true;
       } else {
-        this.question_num--;
-        this.answer_btn_num = this.questions[this.question_num].btn_num;
-        this.question = this.questions[this.question_num].question_text;
-        this.answer_box.splice(this.question_num, 1);
+        //前の画面に戻る
+        //1問目の場合
+        if (this.question_num == 0) {
+          this.start_flg = true;
+          this.about_back_btn = "about";
+          //
+        } else {
+          this.question_num--;
+          this.answer_btn_num = this.questions[this.question_num].btn_num;
+          this.question = this.questions[this.question_num].question_text;
+          this.answer_box.splice(this.question_num, 1);
+        }
+        //
       }
     },
-    //
     //数字と小数点の入力のみ許可する 参考「https://kntmr.hatenablog.com/entry/2019/01/11/175800」
     validate(e) {
       const charCode = e.which ? e.which : e.keyCode;
@@ -201,6 +230,7 @@ export default {
       if (this.question_num == this.questions.length - 1) {
         this.result_flg = false;
         this.answer_box = this.answer_box.flat();
+        this.about_back_btn = "about";
         //男性の場合
         if (this.answer_box[0] == 0) {
           this.calories =
@@ -219,8 +249,8 @@ export default {
               161) *
             this.answer_box[4];
         }
+        //
       }
-      //
       //
     },
     //fieldの数、入力が確認されたら
@@ -236,3 +266,22 @@ export default {
   },
 };
 </script>
+
+<style>
+.contents {
+  position: absolute;
+  top: 120px;
+  left: 0;
+  right: 0;
+  justify-content: center;
+}
+
+.screen {
+  text-align: center;
+}
+
+.about-back {
+  position: fixed;
+  bottom: 10px;
+}
+</style>
