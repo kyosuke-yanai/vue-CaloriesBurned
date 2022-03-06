@@ -54,7 +54,7 @@
           </h1>
 
           <div class="twitter_share">
-            <button @click="twitterShare">ツイッターでシェアする</button>
+            <button @click="twitterShare"><v-icon color="cyan">mdi-twitter</v-icon>ツイッターでシェアする</button>
           </div>
         </div>
       </div>
@@ -232,9 +232,14 @@ export default {
     twitterShare() {
       const shareURL =
         "https://twitter.com/intent/tweet?text=" +
-        "私の1日の消費カロリーは" + this.calories + "でした！" +
+        "私の1日の消費カロリーは" +
+        this.calories +
+        "kcalでした！" +
+        "とりあえず" +
+        this.answer_box[5] +
+        "！" +
         "%20%23カロリー消費診断アプリ";
-        '&url=' + "https://kyosuke-yanai.github.io/vue-CaloriesBurned/";
+      +"&url=" + "https://kyosuke-yanai.github.io/vue-CaloriesBurned/";
       location.href = shareURL;
     },
     //
