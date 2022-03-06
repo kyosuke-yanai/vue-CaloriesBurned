@@ -230,7 +230,11 @@ export default {
 
     //シェアする画面を設定 参考「https://katonobo.com/vue/twitter-share-button/」
     twitterShare() {
-      const shareURL = "https://twitter.com/intent/tweet";
+      const shareURL =
+        "https://twitter.com/intent/tweet?text=" +
+        "私の1日の消費カロリーは" + this.calories + "でした！" +
+        "%20%23カロリー消費診断アプリ";
+        '&url=' + "https://kyosuke-yanai.github.io/vue-CaloriesBurned/";
       location.href = shareURL;
     },
     //
