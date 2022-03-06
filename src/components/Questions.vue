@@ -54,7 +54,9 @@
           </h1>
 
           <div class="twitter_share">
-            <button @click="twitterShare"><v-icon color="cyan">mdi-twitter</v-icon>ツイッターでシェアする</button>
+            <button @click="twitterShare">
+              <v-icon color="cyan">mdi-twitter</v-icon>ツイッターでシェアする
+            </button>
           </div>
         </div>
       </div>
@@ -160,7 +162,7 @@ export default {
       this.start_flg = false;
       this.answer_btn_num = this.questions[this.question_num].btn_num;
       this.question = this.questions[this.question_num].question_text;
-      this.about_back_btn = "◀back";
+      this.about_back_btn = "⇐back";
     },
     //
     //次の質問
@@ -236,7 +238,7 @@ export default {
         this.calories +
         "kcalでした！" +
         "とりあえず" +
-        this.answer_box[5] +
+        this.questions[4].btn[this.answer_box[5]].btn_text +
         "！" +
         "%20%23カロリー消費診断アプリ";
       +"&url=" + "https://kyosuke-yanai.github.io/vue-CaloriesBurned/";
