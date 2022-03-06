@@ -21,8 +21,8 @@
                 :key="n"
               >
                 <v-text-field
-                  v-bind:type="questions[question_num].text_type"
-                  v-bind:label="n"
+                  :type="questions[question_num].text_type"
+                  :label="n"
                   v-model="answer_texts[index]"
                   @keypress="validate"
                   @input="value = format(value)"
@@ -33,7 +33,7 @@
               <div v-for="(n, index) in answer_btn_num" :key="n">
                 <v-col>
                   <v-btn
-                    v-bind:disabled="questions[question_num].activateSubmit_flg"
+                    :disabled="questions[question_num].activateSubmit_flg"
                     color="success"
                     @click="next(questions[question_num].btn_[index].value)"
                   >
@@ -52,6 +52,10 @@
           <h1>
             あなたの1日の消費カロリーは{{ calories.toFixed(1) }}Kcalです。
           </h1>
+
+          <div class="twitter_share">
+            <button @click="twitterShare">ツイッターでシェアする</button>
+          </div>
         </div>
       </div>
     </v-row>
@@ -106,7 +110,7 @@ export default {
           btn_: [{ btn_text: "入力", value: "入力" }],
           text_answer: true,
           text_type: "number",
-          text_answer_fields: ["身長", "体重", "年齢"],
+          text_answer_fields: ["身長(cm)", "体重(kg)", "年齢(歳)"],
           activateSubmit_flg: true,
         },
         {
@@ -222,7 +226,14 @@ export default {
       }
       return this.prevValue;
     },
-    //参考
+    //
+
+    //シェアする画面を設定 参考「https://katonobo.com/vue/twitter-share-button/」
+    twitterShare() {
+      const shareURL = "https://twitter.com/intent/tweet";
+      location.href = shareURL;
+    },
+    //
   },
   watch: {
     //質問が終わったら
@@ -283,5 +294,10 @@ export default {
 .about-back {
   position: fixed;
   bottom: 10px;
+}
+
+.twitter_share {
+  max-width: 1000px;
+  margin: auto;
 }
 </style>
