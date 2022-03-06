@@ -238,7 +238,7 @@ export default {
         this.calories +
         "kcalでした！" +
         "とりあえず" +
-        this.questions[4].btn[this.answer_box[5]].btn_text +
+        this.questions[3].btn_[this.answer_box[5]].btn_text +
         "！" +
         "%20%23カロリー消費診断アプリ";
       +"&url=" + "https://kyosuke-yanai.github.io/vue-CaloriesBurned/";
